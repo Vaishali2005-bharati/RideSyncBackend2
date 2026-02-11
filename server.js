@@ -7,8 +7,7 @@ initializeSocket(server);
 
 const port = process.env.PORT || 5000;
 
-server.listen(port, (req, res) => {
-    console.log(`Server is running on PORT ${port}`);
-   
+ server.listen(port, "0.0.0.0", (req, res) => {
+  console.log(`Server is running on the port: ${port}`);
 });
 

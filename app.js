@@ -1,5 +1,6 @@
 import express from "express";
 const app = express();
+
 import cors from 'cors';
 import db from './db/db.js';
 import dotenv from "dotenv";
@@ -11,7 +12,11 @@ import rideRoutes from './routes/rideRoutes.js';
 dotenv.config();
 db();
 
-app.use(cors());
+   app.use(cors({
+      origin: "https://ridesync1.netlify.app", 
+      methods: ["GET", "POST", "PUT", "DELETE"],
+      credentials: true
+    }));
 
 
 app.use(express.json());
