@@ -55,18 +55,14 @@ const registerUser = async( req, res, next) => {
 
             res.cookie('token', token);
 
-            res.status(200).json(token);
+          return  res.status(200).json(token);
     } catch (err){
         console.error("Error is in the Login Method");
         console.error(err);
     }
   
-
     
 }
-
-
-
 
 export {
     loginUser,
