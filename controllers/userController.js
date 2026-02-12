@@ -5,8 +5,8 @@ import { validationResult } from "express-validator";
 
 const registerUser = async( req, res, next) => {
 
-     
-    const { fullName , email, number, password, vehicleDetails } = req.body;
+     try{
+         const { fullName , email, number, password, vehicleDetails } = req.body;
 
     const isUserAlready = await userModel.findOne({ email});
 
@@ -22,6 +22,11 @@ const registerUser = async( req, res, next) => {
     const token = user.generateAuthToken();
 
     res.status(200).json({token: token});
+     } catch(err) {
+        console.log( " Error is in the register method");
+        console.error(err);
+     }
+   
 
 
 }
@@ -33,24 +38,29 @@ const registerUser = async( req, res, next) => {
     if( !errors.isEmpty())
         return res.status(400).json({message: errors.array() });
 
+    try {
+        const { email, password } = req.body;
 
-    const { email, password } = req.body;
+            const user = await userModel.findOne( { email });
 
-    const user = await userModel.findOne( { email }).select('+password');
+            if( !user)
+                return res.status(401).json({ message: 'Email or password doesnot match to the database ' });
 
-    if( !user)
-        return res.status(401).json({ message: 'Email or password doesnot match to the database ' });
+            const isMatch = await user.comparePassword(password);
 
-    const isMatch = await user.comparePassword(password);
+            if(!isMatch)
+                return res.status(401).json({ message: 'Email or password cannot match to the database.' });
 
-    if(!isMatch)
-        return res.status(401).json({ message: 'Email or password cannot match to the database.' });
+            const token = user.generateAuthToken();
 
-    const token = user.generateAuthToken();
+            res.cookie('token', token);
 
-    res.cookie('token', token);
-
-    res.status(200).json(token);
+            res.status(200).json(token);
+    } catch (err){
+        console.error("Error is in the Login Method");
+        console.error(err);
+    }
+  
 
     
 }
