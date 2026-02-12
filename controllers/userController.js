@@ -1,6 +1,7 @@
 import userModel from "../models/userModel.js";
 import { createUser } from "../services/userService.js";
 import { validationResult } from "express-validator";
+    import bcrypt from "bcrypt";
 
 
 const registerUser = async( req, res, next) => {
@@ -13,7 +14,8 @@ const registerUser = async( req, res, next) => {
     if(isUserAlready)
         return res.status(402).json({ message: 'User Already Exist'});
 
-    const hashedPassword = await userModel.hashPassword(password);
+
+const hashedPassword = await bcrypt.hash(password, 10);
 
     const user = await createUser({
          firstName: fullName.firstName, lastName: fullName.lastName, email, number, password: hashedPassword, vehicleType: vehicleDetails.vehicleType , vehicleColor: vehicleDetails.vehicleColor, numberPlate: vehicleDetails.numberPlate, capacity: vehicleDetails.capacity
@@ -37,23 +39,18 @@ const registerUser = async( req, res, next) => {
         return res.status(400).json({message: errors.array() });
 
     try {
-        const { email, password } = req.body;
+         const { email, password } = req.body;
+  if (!email || !password) {
+    return res.status(400).json({ message: "Email and password required" });
+  }
 
-            const user = await userModel.findOne( { email });
+  const user = await userModel.findOne({ email });
+  if (!user) return res.status(404).json({ message: "User not found" });
 
-            if( !user)
-                return res.status(401).json({ message: 'Email or password doesnot match to the database ' });
+  const isMatch = await bcrypt.compare(password, user.password);
+  if (!isMatch) return res.status(401).json({ message: "Invalid credentials" });
 
-            const isMatch = await user.comparePassword(password);
-
-            if(!isMatch)
-                return res.status(401).json({ message: 'Email or password cannot match to the database.' });
-
-            const token = user.generateAuthToken();
-
-            res.cookie('token', token);
-
-          return res.status(200).json(token);
+  res.status(200).json({ message: "Login successful" });
     } catch (err){
         console.error("Error is in the Login Method");
         console.error(err);

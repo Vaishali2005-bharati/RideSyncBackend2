@@ -82,6 +82,8 @@ const userSchema = new mongoose.Schema({
 
 });
 
+userSchema.index({ location: "2dsphere" });
+
 userSchema.methods.generateAuthToken = function ()  {
     const token = jwt.sign({_id: this._id}, process.env.SECRET_KEY, {expiresIn: '30d'});
     return token;

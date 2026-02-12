@@ -7,7 +7,8 @@ function initializeSocket(server) {
   io = new Server(server, {
     cors: {
       origin: 'https://ridesync1.netlify.app',
-      methods: ['GET', 'POST']
+      methods: ['GET', 'POST'],
+      credentials: true
     }
   });
 
