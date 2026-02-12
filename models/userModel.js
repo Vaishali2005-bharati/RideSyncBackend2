@@ -75,7 +75,7 @@ const userSchema = new mongoose.Schema({
   },
   coordinates: {
     type: [Number], // ✅ This defines the type, not values
-    required: true
+   
   }
 
 }
