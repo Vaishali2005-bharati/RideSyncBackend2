@@ -37,7 +37,6 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true,
         minLength: [6, "Your passwod cannot have less than 6 characters"],
-        select: false,
     },
 
     vehicleDetails: {
