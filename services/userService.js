@@ -19,8 +19,11 @@ const createUser = async ({
             vehicleColor,
             numberPlate,
             capacity,
-        }
-    })
+        },
+    role: "none", // ✅ default role
+    origin: { type: "Point", coordinates: [] },       // ✅ must include coordinates
+    destination: { type: "Point", coordinates: [] },  // ✅ must include coordinates
+  });
 
     return user;
 }

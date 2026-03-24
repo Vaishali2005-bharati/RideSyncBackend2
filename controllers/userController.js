@@ -27,9 +27,25 @@ const hashedPassword = await bcrypt.hash(password, 10);
      } catch(err) {
         console.log( " Error is in the register method");
         console.error(err);
+         return res.status(500).json({ message: "Server error" });
      }
    
 }
+
+const deleteUser = async (req, res) => {
+  try {
+    const userId = req.params.id;
+    const deletedUser = await userModel.findByIdAndDelete(userId); // ✅ use userModel
+
+    if (!deletedUser) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    return res.status(200).json({ message: "User deleted successfully" });
+  } catch (err) {
+    return res.status(500).json({ message: "Error deleting user", error: err.message });
+  }
+};
 
 //  const loginUser = async (req, res, next) => {
 
@@ -83,6 +99,9 @@ const loginUser = async (req, res, next) => {
       return res.status(401).json({ message: "Invalid credentials" });
     }
 
+    
+    const token = user.generateAuthToken();
+
     return res.status(200).json({ message: "Login successful" });
   } catch (err) {
     console.error("Error is in the Login Method");
@@ -91,8 +110,19 @@ const loginUser = async (req, res, next) => {
   }
 };
 
+const logout = async (req, res) => {
+  try {
+    res.clearCookie("token"); 
+    return res.status(200).json({ message: "Logged out successfully" });
+  } catch (err) {
+    return res.status(500).json({ message: "Logout failed", error: err.message });
+  }
+};
+
 export {
     loginUser,
     registerUser,
+    logout,
+    deleteUser,
    
 }

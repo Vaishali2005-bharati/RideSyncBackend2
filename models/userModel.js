@@ -42,22 +42,18 @@ const userSchema = new mongoose.Schema({
     vehicleDetails: {
         vehicleType: {
             type: String,
-            minLength: [3, "Your vehicle Type cannot have less than 3 Characters"],
         },
         
         vehicleColor: {
             type: String,
-            minLength: [3, "Your vehicle color cannot have less than 3 Characters"]
         },
 
          numberPlate: {
             type: String,
-            minLength: [3, "Your vehicle color cannot have less than 3 Characters"],
         },
 
         capacity: {
             type: String,
-            min: [1, "Your vehicle seat cannot have less than 1"]
         }
         
     },
@@ -66,18 +62,45 @@ const userSchema = new mongoose.Schema({
         type: String,
     },
 
-   location: {
+      // ✅ add reviews array
+  reviews: [
+    {
+      rating: { type: Number, min: 1, max: 5 },
+      feedback: { type: String },
+      createdAt: { type: Date, default: Date.now }
+    }
+  ],
+
+  // ✅ Role field
+  role: {
+    type: String,
+    enum: ["driver", "passenger", "none"],
+    default: "none",
+  },
+
+ origin: {
   type: {
     type: String,
-    enum: ['Point'],
-    default: 'Point'
+    enum: ["Point"],
+    default: "Point",
   },
   coordinates: {
-    type: [Number], // ✅ This defines the type, not values
-   
-  }
+    type: [Number],
+    default: [0, 0], // ✅ valid default point
+  },
+},
 
-}
+destination: {
+  type: {
+    type: String,
+    enum: ["Point"],
+    default: "Point",
+  },
+  coordinates: {
+    type: [Number],
+    default: [0, 0], // ✅ valid default point
+  },
+},
 
 });
 
