@@ -11,7 +11,6 @@ import  userRoutes from "./routes/userRoutes.js";
 import  registerRoutes  from './routes/registerRoutes.js';
 import mapRoutes from './routes/mapRoutes.js';
 import rideRoutes from './routes/rideRoutes.js';
-import distanceRoutes from './routes/distanceRoutes.js';
 
 dotenv.config();
 db();
