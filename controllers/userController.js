@@ -23,7 +23,10 @@ const hashedPassword = await bcrypt.hash(password, 10);
 
     const token = user.generateAuthToken();
 
-    res.status(200).json({token: token});
+        res.status(200).json({
+      token,
+      userId: user._id, // ✅ send userId to frontend
+    });
      } catch(err) {
         console.log( " Error is in the register method");
         console.error(err);
@@ -102,7 +105,11 @@ const loginUser = async (req, res, next) => {
     
     const token = user.generateAuthToken();
 
-    return res.status(200).json({ message: "Login successful" });
+   return res.status(200).json({
+      message: "Login successful",
+      token,
+      userId: user._id, // ✅ send userId
+    });
   } catch (err) {
     console.error("Error is in the Login Method");
     console.error(err);
