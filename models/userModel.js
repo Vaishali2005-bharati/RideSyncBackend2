@@ -103,8 +103,9 @@ destination: {
 },
 
 });
-
-userSchema.index({ location: "2dsphere" });
+// Indexes for geospatial queries
+userSchema.index({ origin: "2dsphere" });
+userSchema.index({ destination: "2dsphere" });
 
 userSchema.methods.generateAuthToken = function ()  {
     const token = jwt.sign({_id: this._id}, process.env.SECRET_KEY, {expiresIn: '30d'});
